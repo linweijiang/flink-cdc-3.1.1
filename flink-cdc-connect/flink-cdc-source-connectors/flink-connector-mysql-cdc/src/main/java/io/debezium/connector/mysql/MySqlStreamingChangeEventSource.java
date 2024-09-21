@@ -85,7 +85,7 @@ import static io.debezium.util.Strings.isNullOrEmpty;
 
 /**
  * Copied from Debezium project(1.9.8.Final) to fix
- * https://github.com/ververica/flink-cdc-connectors/issues/1944.
+ * https://github.com/ververica/flink-cdc-connectors/issues/1944.   【我就说怎么会有怎么底层的代码】
  *
  * <p>Line 1427-1433 : Adjust GTID merging logic to support recovering from job which previously
  * specifying starting offset on start.
@@ -365,7 +365,7 @@ public class MySqlStreamingChangeEventSource
     }
 
     protected void handleEvent(
-            MySqlPartition partition, MySqlOffsetContext offsetContext, Event event) {
+            MySqlPartition partition, MySqlOffsetContext offsetContext, Event event) {  //最底层处理mysql binlog数据的方法
         if (event == null) {
             return;
         }
@@ -1012,7 +1012,7 @@ public class MySqlStreamingChangeEventSource
     }
 
     @Override
-    public void execute(
+    public void execute(    // 最底层获取数据的方法，将拿到的数据放到queue中
             ChangeEventSourceContext context,
             MySqlPartition partition,
             MySqlOffsetContext offsetContext)

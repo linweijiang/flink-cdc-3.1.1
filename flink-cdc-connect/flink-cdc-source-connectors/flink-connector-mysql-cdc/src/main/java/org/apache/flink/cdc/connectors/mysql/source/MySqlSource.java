@@ -158,11 +158,11 @@ public class MySqlSource<T>
     }
 
     @Override
-    public SourceReader<T, MySqlSplit> createReader(SourceReaderContext readerContext)
+    public SourceReader<T, MySqlSplit> createReader(SourceReaderContext readerContext) //重点方法
             throws Exception {
         // create source config for the given subtask (e.g. unique server id)
         MySqlSourceConfig sourceConfig =
-                configFactory.createConfig(readerContext.getIndexOfSubtask());
+                configFactory.createConfig(readerContext.getIndexOfSubtask()); //封装了debezium的参数
         FutureCompletingBlockingQueue<RecordsWithSplitIds<SourceRecords>> elementsQueue =
                 new FutureCompletingBlockingQueue<>();
 
@@ -175,7 +175,7 @@ public class MySqlSource<T>
         sourceReaderMetrics.registerMetrics();
         MySqlSourceReaderContext mySqlSourceReaderContext =
                 new MySqlSourceReaderContext(readerContext);
-        Supplier<MySqlSplitReader> splitReaderSupplier =
+        Supplier<MySqlSplitReader> splitReaderSupplier =    //这里创建了splitReader
                 () ->
                         new MySqlSplitReader(
                                 sourceConfig,
@@ -184,7 +184,7 @@ public class MySqlSource<T>
                                 snapshotHooks);
         return new MySqlSourceReader<>(
                 elementsQueue,
-                splitReaderSupplier,
+                splitReaderSupplier,     //再把readerSplit传给 sourceReader
                 recordEmitterSupplier.get(sourceReaderMetrics, sourceConfig),
                 readerContext.getConfiguration(),
                 mySqlSourceReaderContext,
@@ -192,7 +192,7 @@ public class MySqlSource<T>
     }
 
     @Override
-    public SplitEnumerator<MySqlSplit, PendingSplitsState> createEnumerator(
+    public SplitEnumerator<MySqlSplit, PendingSplitsState> createEnumerator(     //重点方法
             SplitEnumeratorContext<MySqlSplit> enumContext) {
         MySqlSourceConfig sourceConfig = configFactory.createConfig(0, ENUMERATOR_SERVER_NAME);
 

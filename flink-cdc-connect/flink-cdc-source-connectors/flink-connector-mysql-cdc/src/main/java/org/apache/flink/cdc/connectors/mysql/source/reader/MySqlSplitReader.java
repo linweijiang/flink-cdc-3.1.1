@@ -123,7 +123,7 @@ public class MySqlSplitReader implements SplitReader<SourceRecords, MySqlSplit> 
                 LOG.info("No available split to read.");
             }
             dataIt = currentReader.pollSplitRecords();
-            return dataIt == null ? finishedSplit() : forRecords(dataIt);
+            return dataIt == null ? finishedSplit() : forRecords(dataIt);   //拿到数据，注意是MysqlRecords，有后缀 s
         } else if (currentReader instanceof SnapshotSplitReader) {
             // (2) try to switch to binlog split reading util current snapshot split finished
             dataIt = currentReader.pollSplitRecords();

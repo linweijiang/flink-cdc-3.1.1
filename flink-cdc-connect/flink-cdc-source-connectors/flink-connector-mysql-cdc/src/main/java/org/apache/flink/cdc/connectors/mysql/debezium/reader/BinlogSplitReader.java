@@ -144,12 +144,12 @@ public class BinlogSplitReader implements DebeziumReader<SourceRecords, MySqlSpl
 
     @Nullable
     @Override
-    public Iterator<SourceRecords> pollSplitRecords() throws InterruptedException {
+    public Iterator<SourceRecords> pollSplitRecords() throws InterruptedException {     //对于CDC来说，这里是获取的最原始的数据
         checkReadException();
         final List<SourceRecord> sourceRecords = new ArrayList<>();
         if (currentTaskRunning) {
-            List<DataChangeEvent> batch = queue.poll();
-            for (DataChangeEvent event : batch) {
+            List<DataChangeEvent> batch = queue.poll();     //问题：queue怎么关联起来，没看到有数据写到queue里?  答：Dispatcher里有包含queue，cdc做了一层加工封装，初看挺复杂的。
+            for (DataChangeEvent event : batch) {           //不过可以确定的是，这里的数据就是debezium拿到最原始的数据记录
                 if (shouldEmit(event.getRecord())) {
                     sourceRecords.add(event.getRecord());
                 }

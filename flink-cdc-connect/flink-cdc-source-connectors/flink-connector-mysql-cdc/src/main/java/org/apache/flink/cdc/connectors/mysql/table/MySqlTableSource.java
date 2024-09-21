@@ -174,7 +174,7 @@ public class MySqlTableSource implements ScanTableSource, SupportsReadingMetadat
                         .setUserDefinedConverterFactory(
                                 MySqlDeserializationConverterFactory.instance())
                         .build();
-        if (enableParallelRead) {
+        if (enableParallelRead) { //默认是true，即支持并发读取，即用新Source架构
             MySqlSource<RowData> parallelSource =
                     MySqlSource.<RowData>builder()
                             .hostname(hostname)
