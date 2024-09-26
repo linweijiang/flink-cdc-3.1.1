@@ -454,26 +454,14 @@ public class MySqlSourceReader<T>
             boolean checkNewlyAddedTableSchema) {
         if (split.getTableSchemas().isEmpty() || checkNewlyAddedTableSchema) {
             try (MySqlConnection jdbc = DebeziumUtils.createMySqlConnection(sourceConfig)) {
-                Map<TableId, TableChanges.TableChange> tableSchemas;
-                if (split.getTableSchemas().isEmpty()) {
-                    tableSchemas =
-                            TableDiscoveryUtils.discoverSchemaForCapturedTables(
-                                    partition, sourceConfig, jdbc);
-                    LOG.info(
-                            "Source reader {} discovers table schema for binlog split {} success",
-                            subtaskId,
-                            split.splitId());
-                } else {
-                    List<TableId> existedTables = new ArrayList<>(split.getTableSchemas().keySet());
-                    tableSchemas =
-                            TableDiscoveryUtils.discoverSchemaForNewAddedTables(
-                                    partition, existedTables, sourceConfig, jdbc);
-                    LOG.info(
-                            "Source reader {} discovers table schema for new added tables of binlog split {} success",
-                            subtaskId,
-                            split.splitId());
-                }
-                return MySqlBinlogSplit.fillTableSchemas(split, tableSchemas);
+                Map<TableId, TableChanges.TableChange> tableSchemas =
+                        TableDiscoveryUtils.discoverSchemaForCapturedTables(
+                                partition, sourceConfig, jdbc);
+                LOG.info(
+                        "Source reader {} discovers table schema for binlog split {} success",
+                        subtaskId,
+                        split.splitId());
+                return MySqlBinlogSplit.coverTableSchemas(split, tableSchemas);
             } catch (SQLException e) {
                 LOG.error(
                         "Source reader {} failed to obtains table schemas due to {}",

@@ -27,15 +27,41 @@ limitations under the License.
 
     <artifactId>flink-connector-mysql-cdc</artifactId>
     <name>flink-connector-mysql-cdc</name>
+    <version>3.1.1-dev</version>
     <packaging>jar</packaging>
 
-    <dependencies>
+    <properties>
+        <original.project.version>3.1.1</original.project.version>
+    </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-cdc-common</artifactId>
+            <version>${original.project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-cdc-runtime</artifactId>
+            <version>${original.project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.codehaus.janino</groupId>
+                    <artifactId>janino</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.calcite</groupId>
+                    <artifactId>calcite-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
         <!-- Debezium dependencies -->
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-connector-debezium</artifactId>
-            <version>${project.version}</version>
+            <version>${original.project.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>kafka-log4j-appender</artifactId>
@@ -53,7 +79,7 @@ limitations under the License.
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-cdc-common</artifactId>
-            <version>${project.version}</version>
+            <version>${original.project.version}</version>
         </dependency>
 
         <!-- geometry dependencies -->
@@ -86,7 +112,7 @@ limitations under the License.
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-connector-test-util</artifactId>
-            <version>${project.version}</version>
+            <version>${original.project.version}</version>
             <scope>test</scope>
         </dependency>
 
